@@ -1,3 +1,15 @@
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+input.text-box, button, select, textarea {
+  font-size: 16px !important; /* ズーム抑止用の基準 */
+  line-height: 1.3;
+}
+
+.scale-wrapper input.text-box {
+  /* ここでは16pxのまま。transformで視覚的縮小 */
+}
 .image-container {
   position: relative;
   display: inline-block;
