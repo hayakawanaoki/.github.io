@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<footer>
+
+    <div class="main-button">
+        <div class="back-menu-button">
+            <button id="backMenuButton"
+                    th:if="${backMenuButtonLink != null}"
+                    th:attr="onclick=|navigateTo('${backMenuButtonLink}')|">閉じる
+            </button>
+        </div>
+
+        <div class="continue-button">
+            <button id="continueButton"
+                    th:if="${continueButtonLink != null}"
+                    th:text="${continueButtonText} ?: '次へ進む'"
+                    th:attr="onclick=|navigateTo('${continueButtonLink}')|">
+            </button>
+        </div>
+    </div>
+
+    <div class="text-button" th:if="${changeAddressButtonLink != null or editDetailButtonLink != null}">
+        <div class="change-address-button">
+            <button id="changeAddressButton"
+                    th:if="${changeAddressButtonLink != null}"
+                    th:attr="onclick=|navigateTo('${changeAddressButtonLink}')|">住所を変更する
+            </button>
+        </div>
+
+        <div class="edit-detail-button">
+            <button id="editDetailButton"
+                    th:if="${editDetailButtonLink != null}"
+                    th:attr="onclick=|navigateTo('${editDetailButtonLink}')|">入力内容を修正する
+            </button>
+        </div>
+    </div>
+
+</footer>
+<script th:src="@{/js/footer.js}"></script>
