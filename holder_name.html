@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>カード名義の入力</title>
+    <!-- インライン化したCSS（common.css + holder_name.css） -->
+    <style>
+        /* --- common.css --- */
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+          margin: 0; padding: 0; width: 100%; height: 100%;
+          font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+          font-weight: 300; font-size: 14px; font-style: normal;
+          line-height: 18px; background: #F9F9F9; overflow-x: hidden;
+        }
+        footer {
+          position: fixed; bottom: 0; left: 0; width: 100%; height: 96px;
+          background: #F9F9F9; display: flex; flex-direction: column;
+          justify-content: center; align-items: center; z-index: 10;
+        }
+        .container, .confirm-container {
+          position: relative; width: 100%; min-width: 375px; margin: 0 auto;
+          padding: 16px; display: flex; flex-direction: column; overflow: hidden; align-items: center; gap: 24px;
+        }
+        .confirm-container { padding: 8px 16px 16px 16px; gap: 16px; }
+        .complete-container { display: flex; flex-direction: row; align-items: flex-start; padding: 0px 16px; width: 100%; }
+        .scrollable-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 96px; }
+        .progress-image { margin: 8px auto 0px auto; display: block; }
+        .main-message { font-weight: 600; font-size: 20px; line-height: 28px; color: #555555; text-align: center; width: 100%; }
+        .description { font-weight: normal; color: rgba(85, 85, 85, 1); text-align: center; width: 95%; }
+        .main-button { width: 85%; max-width: 430px; text-align: center; }
+        .main-button button {
+          font-weight: 600; width: 100%; padding: 12px 20px; font-size: 16px;
+          background-color: rgba(32, 174, 229, 1); color: rgba(255, 255, 255, 1);
+          border: none; border-radius: 24px;
+        }
+        .main-button button:active { background-color: rgba(0, 86, 179, 1); }
+        .text-button { width: 85%; max-width: 430px; text-align: center; margin-top: 18px; }
+        .text-button button {
+          font-weight: 600; font-size: 16px; color: rgba(8, 146, 199, 1);
+          border: none; background: transparent; padding: 0;
+        }
+        .text-button button:active { color: rgba(0, 86, 179, 1); }
+        .guide-text { font-weight: 600; color: #555555; text-align: center; width: 100%; }
+        .guide-subtext { width: 100%; font-size: 12px; text-align: left; color: #555555; }
+        .caption-box { width: 100%; background: #F5F5F5; border-radius: 12px; padding: 12px; box-sizing: border-box; }
+        .error-text {
+          width: 311px; height: 18px; margin: 8px auto 0; font-size: 12px; letter-spacing: 0px;
+          color: rgba(245, 88, 82, 1); text-align: center; border-radius: 4px; display: none; margin: 5px;
+        }
+        .error-text.show { display: block; }
+        .input-wrapper { display: flex; justify-content: center; gap: 12px; width: 100%; align-items: center; }
+        .input-box {
+          width: 56px; height: 64px; padding: 11px 14px; border-radius: 10px; background: #FFFFFF;
+          border: 4px solid rgba(237, 242, 247, 1); font-size: 16px; text-align: center; box-sizing: border-box;
+          line-height: 26px; letter-spacing: 0px;
+        }
+        .input-box:focus { border-color: rgba(85, 85, 85, 0.16); outline: none; }
+        .guide-image { width: 100%; height: auto; }
+        .dialog-overlay {
+          display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+          background-color: rgba(0, 0, 0, 0.2); justify-content: center; align-items: center; z-index: 9999;
+        }
+        .dialog-box {
+          width: 72%; background: #F2F2F2CC; backdrop-filter: blur(22px); border-radius: 14px; height: auto; flex-direction: column;
+        }
+        .dialog-message-area { display: flex; justify-content: center; align-items: center; }
+        .dialog-message { padding: 16px; width: 90%; font-weight: 400; font-size: 13px; line-height: 18px; color: #000000; text-align: center; }
+        .divider-horizontal { height: 0.5px; background: #3C3C435C; width: 100%; }
+        .divider-split { position: absolute; background: #3C3C435C; width: 0.5px; left: 50%; bottom: 0; top: 0; transform: translateX(-50%); }
+        .dialog-button-area { position: relative; display: flex; justify-content: space-between; align-items: center; }
+        .dialog-button-area button {
+          flex: 1; padding: 11px 0; background-color: transparent; border: none; cursor: pointer;
+          font-weight: 400; font-size: 17px; line-height: 22px; color: #20AEE5;
+        }
+        .dialog-button-area button:active { background-color: rgba(0, 0, 0, 0.05); }
+        .menu-label { font-weight: 600; font-size: 16px; color: rgba(85, 85, 85, 1); }
+        .background-container { position: relative; transform: none; width: 100%; background: #FFFFFF; border-radius: 24px; }
+        .confirm-background-container {
+          position: relative; transform: none; width: 100%; background: #FFFFFF;
+          border-radius: 24px; padding: 16px; gap: 16px; display: flex; flex-direction: column;
+        }
+        .white-pillow {
+          display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;
+          margin: 64px 16px 0 16px; padding: 73px 16px; background-color: rgba(255, 255, 255, 1); border-radius: 24px; gap: 16px;
+        }
+        .link-wrapper { align-self: flex-start; width: 100%; }
+        .link-text { display: inline; font-size: 12px; height: 18px; text-align: left; color: rgba(8, 146, 199, 1); text-decoration: none; }
+        header { width: 100%; height: 64px; background-color: #f9f9f9; }
+        .separator { border: none; border-top: 2px solid rgba(0, 0, 0, 0.02); width: calc(100% - 16px); margin-top: 0; margin-bottom: 0; margin-left: 16px; }
+        .common-image { width: 72px; height: 72px; object-fit: contain; }
+        .system-error-text { margin: 20px 0px 0px; }
+        .system-error-sub-text { margin: 20px 0px 0px; }
+        .card-text { font-weight: 600; font-size: 16px; line-height: 26px; color: #555555; }
+        .describe-text { font-size: 12px; line-height: 26px; color: #555555; }
+        .result-text { font-weight: 600; font-size: 20px; line-height: 28px; color: #555555; }
+        .input-box.masked { font-size: 16px; line-height: 26px; letter-spacing: 0px; text-align: center; }
+        .padding-left-right-16 { padding: 0px 16px; }
+        .gap4 { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+        .description ul { list-style-type: none; padding: 0; margin: 0; }
+        .title-text { font-size: 16px; line-height: 26px; color: #555555; }
+
+        /* --- holder_name.css --- */
+        .image-container {
+          position: relative;
+          display: inline-block;
+          padding: 0px 16px;
+          gap: 10px;
+          display: flex;
+        }
+        .name-label {
+          position: absolute;
+          bottom: 41px;
+          right: 50px;
+          padding: 5px 10px;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 100%;
+          letter-spacing: 1%;
+          color: rgba(204, 204, 204, 1);
+        }
+        .name-container {
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .text-box {
+          width: 100%;
+          height: 52px;
+          padding: 11px 14px 11px 8px;
+          margin-top: 12px;
+          border-radius: 60px;
+          border: 4px solid rgba(237, 242, 247, 1);
+          font-weight: 300;
+          font-size: 14px;
+          line-height: 22px;
+          color: #555555;
+          box-sizing: border-box;
+        }
+        .text-box.error {
+          border-color: rgba(255, 231, 222, 1);
+          background-color: rgba(255, 245, 241, 1);
+        }
+        .text-box:focus {
+          border-color: rgba(85, 85, 85, 0.16);
+          outline: none;
+        }
+        ::placeholder { color: rgba(204, 204, 204, 1); }
+        .error-message {
+          color: rgba(245, 88, 82, 1);
+          font-size: 0.85em;
+          display: none;
+          margin: 8px 5px 0;
+        }
+        .error-message.show { display: block; }
+        .row { display: flex; flex-direction: column; flex: 1; }
+        .guide-text { text-align: left; }
+    </style>
+</head>
+<body>
+    <!-- プログレスバー画像（パスは静的に修正） -->
+    <img alt="プログレスバー" class="progress-image" src="images/progressbar_3.svg"/>
+    <div class="confirm-container">
+        <div class="confirm-background-container">
+            <div class="image-container">
+                <img alt="読み込みに失敗しました。時間をあけて再度お試しください。" class="guide-image" id="guideImage"
+                     src="images/guide_image.png">
+                <label class="name-label" id="nameLabel"></label>
+            </div>
+            <div class="name-container">
+                <div class="row">
+                    <label class="guide-text">名（ローマ字）</label>
+                    <input class="text-box" id="firstName" placeholder="TAROU" type="text"/>
+                    <p class="error-message" id="firstNameError"></p>
+                </div>
+                <div class="row">
+                    <label class="guide-text">姓（ローマ字）</label>
+                    <input class="text-box" id="lastName" placeholder="YAMADA" type="text"/>
+                    <p class="error-message" id="lastNameError"></p>
+                </div>
+            </div>
+            <div class="guide-subtext">
+                カード名義にお間違いがないかご確認ください。本名と異なる場合、一部の店舗でご利用いただけない可能性があります。
+            </div>
+        </div>
+        <!-- フッター（Thymeleafではなく静的に設置） -->
+        <footer>
+            <div class="main-button">
+                <button id="continueButton">次へ</button>
+            </div>
+        </footer>
+    </div>
+    <!-- JavaScriptのインライン化 -->
+    <script>
+        //定数宣言
+        const firstNameInput = document.getElementById('firstName');
+        const lastNameInput = document.getElementById('lastName');
+        const firstNameError = document.getElementById('firstNameError');
+        const lastNameError = document.getElementById('lastNameError');
+        const nameLabel = document.getElementById('nameLabel');
+        const MAX_TOTAL_LENGTH = 22;
+        const ALLOWED_REGEXP = /^[A-Z.\-\/ ]+$/;
+
+        // CSRFトークンはmetaタグとして設置（必要なら↓）
+        // <meta name="_csrf" content="トークン値">
+        // <meta name="_csrf_header" content="ヘッダ名">
+
+        function getCsrfToken() {
+            const metaCsrf = document.querySelector('meta[name="_csrf"]');
+            const metaHeader = document.querySelector('meta[name="_csrf_header"]');
+            return {
+                token: metaCsrf ? metaCsrf.getAttribute('content') : '',
+                header: metaHeader ? metaHeader.getAttribute('content') : ''
+            };
+        }
+
+        //関数宣言
+        const fetchSessionData = async () => {
+            // 本番環境ではAPIを叩く。ここでは省略
+            return { holderName: { firstName: '', lastName: '' }, transactionType: '', design: {} };
+        };
+
+        const setInputValues = (firstName, lastName) => {
+            if (firstName) {
+                firstNameInput.value = firstName;
+            }
+            if (lastName) {
+                lastNameInput.value = lastName;
+            }
+            updateNameLabel();
+        };
+
+        const updateNameLabel = () => {
+            const firstName = firstNameInput.value.trim().toUpperCase() || firstNameInput.placeholder.toUpperCase();
+            const lastName = lastNameInput.value.trim().toUpperCase() || lastNameInput.placeholder.toUpperCase();
+            nameLabel.textContent = `${firstName} ${lastName}`.trim();
+        };
+
+        const handleBlurAndUpdateLabel = (input) => {
+            input.value = input.value.toUpperCase();
+            updateNameLabel();
+        }
+
+        const limitInputLength = (currentInput, otherInput) => {
+            const currentLength = currentInput.value.length;
+            const otherLength = otherInput.value.length;
+            const remainingLength = MAX_TOTAL_LENGTH - otherLength;
+            if (currentLength > remainingLength) {
+                currentInput.value = currentInput.value.slice(0, remainingLength);
+            }
+        };
+
+        const removeFullWidthSpaces = (str) => {
+            return str.replace(/^[\u3000]+|[\u3000]+$/g, '');
+        }
+
+        const showError = async (messageId, errorElem, inputElem) => {
+            // 本番環境ではAPIを叩く。ここではサンプルメッセージ
+            let message = "エラーが発生しました";
+            if (messageId === 'MEC01AEW01') message = "入力してください";
+            if (messageId === 'MEC01AEW02') message = "半角英字・記号のみ利用できます";
+            errorElem.innerText = message;
+            errorElem.classList.add("show");
+            inputElem.classList.add("error");
+        };
+
+        const hideError = (errorElem, inputElem) => {
+            errorElem.innerText = "";
+            errorElem.classList.remove("show");
+            if (inputElem) {
+                inputElem.classList.remove("error");
+            }
+        };
+
+        const isValidName = (value) => {
+            if (!value) return false;
+            return ALLOWED_REGEXP.test(value);
+        };
+
+        const clearErrorIfValid = (inputElem, errorElem) => {
+            const raw = removeFullWidthSpaces(inputElem.value);
+            if (isValidName(raw)) {
+                hideError(errorElem, inputElem);
+            }
+        };
+
+        const saveHolderName = async (firstName, lastName) => {
+            // 本番環境ではAPIを叩く。ここでは省略
+            return true;
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const sessionData = await fetchSessionData();
+            const holderName = sessionData?.holderName || {};
+            const transactionType = sessionData?.transactionType;
+            const design = sessionData?.design;
+
+            setInputValues(holderName.firstName, holderName.lastName);
+
+            if (design) {
+                if (design.name_img) {
+                    const guideImage = document.getElementById('guideImage');
+                    if (guideImage) {
+                        guideImage.src = design.name_img;
+                    }
+                }
+                if (design.name_font_color) {
+                    const nameLabel = document.getElementById('nameLabel');
+                    if (nameLabel) {
+                        nameLabel.style.color = design.name_font_color;
+                    }
+                }
+            }
+
+            updateNameLabel();
+
+            firstNameInput.addEventListener('input', () => limitInputLength(firstNameInput, lastNameInput));
+            lastNameInput.addEventListener('input', () => limitInputLength(lastNameInput, firstNameInput));
+            firstNameInput.addEventListener('blur', () => {
+                handleBlurAndUpdateLabel(firstNameInput);
+                clearErrorIfValid(firstNameInput, firstNameError);
+            });
+            lastNameInput.addEventListener('blur', () => {
+                handleBlurAndUpdateLabel(lastNameInput);
+                clearErrorIfValid(lastNameInput, lastNameError);
+            });
+
+            document.getElementById('continueButton').addEventListener('click', async () => {
+                const firstNameValue = removeFullWidthSpaces(firstNameInput.value);
+                const lastNameValue = removeFullWidthSpaces(lastNameInput.value);
+                let hasError = false;
+
+                hideError(firstNameError, firstNameInput);
+                hideError(lastNameError, lastNameInput);
+
+                // クライアント側バリデーション
+                if (!firstNameValue) {
+                    await showError('MEC01AEW01', firstNameError, firstNameInput);
+                    hasError = true;
+                } else if (!ALLOWED_REGEXP.test(firstNameValue)) {
+                    await showError('MEC01AEW02', firstNameError, firstNameInput);
+                    hasError = true;
+                }
+                if (!lastNameValue) {
+                    await showError('MEC01AEW01', lastNameError, lastNameInput);
+                    hasError = true;
+                } else if (!ALLOWED_REGEXP.test(lastNameValue)) {
+                    await showError('MEC01AEW02', lastNameError, lastNameInput);
+                    hasError = true;
+                }
+                if (hasError) return;
+
+                // サーバ側バリデーション省略（API呼び出し部分は必要に応じて追加）
+                // 全てOKなので格納
+                await saveHolderName(firstNameValue, lastNameValue);
+                window.location.href = '/pinSetup'; // 暗証番号設定画面への遷移
+            });
+        });
+    </script>
+</body>
+</html>
