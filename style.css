@@ -1,0 +1,209 @@
+.image-container {
+  position: relative;
+  display: inline-block;
+  padding: 0px 16px;
+  gap: 10px;
+  display: flex;
+}
+
+.name-label {
+  position: absolute;
+  bottom: 41px;
+  right: 50px;
+  padding: 5px 10px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: 1%;
+  color: rgba(204, 204, 204, 1);
+}
+
+.name-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-box {
+  width: 100%;
+  height: 52px;
+  padding: 11px 14px 11px 8px;
+  margin-top: 12px;
+  border-radius: 60px;
+  border: 4px solid rgba(237, 242, 247, 1);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 22px;
+  color: #555555;
+  box-sizing: border-box;
+}
+
+.text-box.error {
+  border-color: rgba(255, 231, 222, 1);
+  background-color: rgba(255, 245, 241, 1);
+}
+
+.text-box:focus {
+  border-color: rgba(85, 85, 85, 0.16);
+  outline: none;
+}
+
+::placeholder {
+  color: rgba(204, 204, 204, 1);
+}
+
+.error-message {
+  color: rgba(245, 88, 82, 1);
+  font-size: 0.85em;
+  display: none;
+  margin: 8px 5px 0;
+}
+
+.error-message.show {
+  display: block;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  flex: 1;  /* ← 均等に幅を分ける */
+}
+
+.guide-text {
+  text-align: left;
+}
+
+/* 名: 14px そのまま（既定 .text-box が14px） */
+#firstName {
+  font-size: 14px; /* 明示（統一） */
+}
+
+/* 姓入力も表示領域(高さ/幅)を統一するため scale を廃止 */
+#lastName {
+  font-size: 16px; /* テキストだけ 16px 強調したい場合は維持 */
+  line-height: 22px; /* .text-box と揃える */
+  height: 52px; /* スケール撤去で高さ再保証 */
+  padding: 11px 14px 11px 8px; /* 基本と同じ */
+}
+/* === 比較表示用追加 === */
+.name-container { gap: 16px; }
+.name-container-14 .text-box { font-size:14px; }
+.name-container-scaled .scaled-wrapper { width:100%; }
+.col { display:flex; flex-direction:column; flex:1; }
+
+/* ラッパで枠を保持し、中の入力のみ縮小 */
+.scaled-wrapper {
+  width:100%;
+  height:52px;
+  border:4px solid rgba(237, 242, 247, 1);
+  border-radius:60px;
+  padding:11px 14px 11px 8px;
+  box-sizing:border-box;
+  background:#FFFFFF;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+.scaled16 {
+  width:100%;
+  height:100%;
+  border:none;
+  background:transparent;
+  font-weight:300;
+  font-size:16px; /* 元のサイズ */
+  line-height:22px;
+  color:#555555;
+  transform:scale(0.875);
+  transform-origin:left top;
+  padding:0; /* ラッパが余白を持つ */
+  box-sizing:border-box;
+}
+.scaled16:focus { outline:none; }
+
+/* 3行目: ネイティブ16px（枠サイズ既存と同じ） */
+.name-container-16 .text-box-16 {
+  font-size:16px;
+  line-height:22px; /* 高さ統一 */
+}
+
+/* もし文字サイズも完全に揃えたい場合は上記 16px を 14px に変更してください */
+
+/* ==== 共通系 (common.css から抜粋) ==== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  background: #F9F9F9;
+  overflow-x: hidden;
+}
+footer.page-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 96px;
+  background: #F9F9F9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+.continue-button {
+  width: 85%;
+  max-width: 430px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #20AEE5;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.continue-button:active {
+  background-color: #0056B3;
+}
+.confirm-container {
+  position: relative;
+  width: 100%;
+  min-width: 375px;
+  margin: 0 auto;
+  padding: 8px 16px 96px 16px; /* 下部は固定footer分の余白 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+}
+.confirm-background-container {
+  position: relative;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.progress-image {
+  margin: 8px auto 0;
+  display: block;
+}
+.guide-subtext {
+  width: 100%;
+  font-size: 12px;
+  text-align: left;
+  color: #555555;
+}
+/* guide-text は既存で text-align:left 指定があるため font-weight 等は後から調整可能 */
