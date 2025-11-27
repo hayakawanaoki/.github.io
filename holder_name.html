@@ -1,41 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<th:block th:replace="~{head :: head(cssPath='/css/holder_name.css', pageTitle='カード名義の入力')}"></th:block>
-
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>カード名義の入力</title>
+    <link rel="stylesheet" href="/css/holder_name.css">
+</head>
 <body>
-<img alt="プログレスバー" class="progress-image"
-     src="../static/images/progressbar_3.svg" th:src="@{/images/progressbar_3.svg}"/>
-<div class="confirm-container">
-    <div class="confirm-background-container">
-        <div class="image-container">
-            <img alt="読み込みに失敗しました。時間をあけて再度お試しください。" class="guide-image" id="guideImage"
-                 src="../static/images/guide_image.png"
-                 th:src="@{/images/guide_image.png}">
-            <label class="name-label" id="nameLabel"></label>
-        </div>
-        <div class="name-container">
-            <div class="row">
-                <label class="guide-text">名（ローマ字）</label>
-                <input class="text-box" id="firstName" placeholder="TAROU" type="text"/>
-                <p class="error-message" id="firstNameError"></p>
+    <img alt="プログレスバー" class="progress-image" src="/images/progressbar_3.svg" />
+    <div class="confirm-container">
+        <div class="confirm-background-container">
+            <div class="image-container">
+                <img alt="読み込みに失敗しました。時間をあけて再度お試しください。" class="guide-image" id="guideImage"
+                     src="/images/guide_image.png">
+                <label class="name-label" id="nameLabel"></label>
             </div>
-            <div class="row">
-                <label class="guide-text">姓（ローマ字）</label>
-                <input class="text-box" id="lastName" placeholder="YAMADA" type="text"/>
-                <p class="error-message" id="lastNameError"></p>
+            <div class="name-container">
+                <div class="row">
+                    <label class="guide-text">名（ローマ字）</label>
+                    <input class="text-box" id="firstName" placeholder="TAROU" type="text"/>
+                    <p class="error-message" id="firstNameError"></p>
+                </div>
+                <div class="row">
+                    <label class="guide-text">姓（ローマ字）</label>
+                    <input class="text-box" id="lastName" placeholder="YAMADA" type="text"/>
+                    <p class="error-message" id="lastNameError"></p>
+                </div>
+            </div>
+            <div class="guide-subtext">
+                カード名義にお間違いがないかご確認ください。本名と異なる場合、一部の店舗でご利用いただけない可能性があります。
             </div>
         </div>
-        <div class="guide-subtext">
-            カード名義にお間違いがないかご確認ください。本名と異なる場合、一部の店舗でご利用いただけない可能性があります。
+        <!-- footerコンポ―ネントはインクルードできないため直接記述 -->
+        <div class="footer">
+            <a class="continue-button" href="#">続ける</a>
         </div>
     </div>
-    <!-- footerコンポ―ネント呼び出し -->
-    <th:block th:replace="~{footer :: footer(continueButtonLink='#')}"></th:block>
-</div>
 
-<!-- JavaScriptの読み込み -->
-<script src="../static/js/holder_name.js" th:src="@{/js/holder_name.js}"></script>
-<script src="../static/js/footer.js" th:src="@{/js/footer.js}"></script>
+    <!-- JavaScriptの読み込み -->
+    <script src="/js/holder_name.js"></script>
+    <script src="/js/footer.js"></script>
 </body>
 </html>
