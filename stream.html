@@ -1,0 +1,19 @@
+<html>
+
+<head>
+    <title>VHS de HLS</title>
+    <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
+</head>
+
+<body>
+    <video-js id=example-video width=1280 height=720 class="vjs-default-skin" controls>
+        <source src="https://mybakettest.s3.ap-northeast-1.amazonaws.com/output/output.m3u8"
+            type="application/x-mpegURL">
+    </video-js>
+    <script src="https://vjs.zencdn.net/7.4.1/video.js"></script>
+    <script>
+        var player = videojs('example-video');
+    </script>
+</body>
+
+</html>
