@@ -6,6 +6,11 @@
     <title>フォーカス確認</title>
     <style>
     /* ここからCSSを埋め込み */
+    .guide-image {
+      touch-action: manipulation; /* これで一部タッチ操作のみ許可 */
+      -webkit-user-select: none;
+      user-select: none;
+    }
     .image-container {
       position: relative;
       display: inline-block;
